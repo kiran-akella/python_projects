@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resource Monitoring Dashboard</title>
+    <link rel="stylesheet" href="/static/frontend/dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <h1 style="text-align:center;margin:0;">Resource Monitoring Dashboard</h1>
+        <a href="/docs" target="_blank" style="position:absolute;right:2rem;top:2rem;padding:0.5rem 1.2rem;border-radius:6px;border:none;background:#4a90e2;color:#fff;cursor:pointer;text-decoration:none;font-weight:500;">API Docs</a>
+    </header>
+    <div class="container">
+        <div class="info-grid">
+            <div class="info-card">
+                <div class="stat-title">System Uptime</div>
+                <div class="stat-value" id="uptime">{{ uptime }}</div>
+            </div>
+            <div class="info-card">
+                <div class="stat-title">Last Reboot</div>
+                <div class="stat-value time-display">
+                    <div id="reboot-date">{{ last_reboot_date }}</div>
+                    <div id="reboot-time">{{ last_reboot_time }}</div>
+                </div>
+            </div>
+            <div class="info-card">
+                <div class="stat-title">Current System Time</div>
+                <div class="stat-value time-display">
+                    <div id="current-date"></div>
+                    <div id="current-time"></div>
+                </div>
+            </div>
+        </div>
+        <div id="current-stats" class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-title">CPU Usage</div>
+                <div class="stat-value" id="cpu">{{ cpu_percent }}%</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">Memory Usage</div>
+                <div class="stat-value" id="mem">{{ memory_percent }}%</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">Disk Usage</div>
+                <div class="stat-value" id="disk">{{ disk_percent }}%</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">Disk I/O Speed</div>
+                <div class="stat-value" id="disk-io">0 MB/s</div>
+            </div>
+        </div>
+        <div class="avg-section">
+            <h2 style="margin-top:2.5rem; text-align:center;">Average Stats</h2>
+            <div id="avg-stats" class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-title">Avg CPU</div>
+                    <div class="stat-value" id="avg-cpu">{{ avg_cpu_percent|round(2) }}%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">Avg Memory</div>
+                    <div class="stat-value" id="avg-mem">{{ avg_memory_percent|round(2) }}%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">Avg Disk</div>
+                    <div class="stat-value" id="avg-disk">{{ avg_disk_percent|round(2) }}%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">Disk I/O Avg</div>
+                    <div class="stat-value" id="disk-io-avg">0 MB/s</div>
+                </div>
+            </div>
+        </div>
+        <div class="history-section">
+            <h2 style="margin-top:2.5rem; text-align:center;">Historical Data</h2>
+            <div class="filter-bar">
+                <label for="from-date">From</label>
+                <input type="datetime-local" id="from-date">
+                <label for="to-date">To</label>
+                <input type="datetime-local" id="to-date">
+                <button onclick="applyFilter()">Filter</button>
+                <button onclick="resetFilter()">Reset</button>
+            </div>
+            <table id="history-table">
+                <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>CPU (%)</th>
+                        <th>Memory (%)</th>
+                        <th>Disk (%)</th>
+                        <th>Disk I/O Speed (MB/sec)</th>
+                    </tr>
+                </thead>
+                <tbody id="history-body">
+                    {% if history and history|length > 0 %}
+                        {% for row in history %}
+                        <tr>
+                            <td>{{ row.timestamp }}</td>
+                            <td>{{ row.cpu_percent }}</td>
+                            <td>{{ row.memory_percent }}</td>
+                            <td>{{ row.disk_percent }}</td>
+                            <td>{{ row.disk_io_mb_sec }}</td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr><td colspan="5" class="no-data">No historical data available.</td></tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+        <div class="error" id="error"></div>
+    </div>
+    <script src="/static/frontend/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+# External libraries
+fastapi
+uvicorn
+psutil
+jinja2
+requests
+matplotlib
+
+# Internal/standard libraries (for documentation only, not required for pip)
+# sqlite3 (Python standard library)
+# threading (Python standard library)
+# time (Python standard library)
+# os (Python standard library)
+# json (Python standard library)
+# smtplib (Python standard library)
+# email (Python standard library)
+# io (Python standard library)
+# datetime (Python standard library)
+
